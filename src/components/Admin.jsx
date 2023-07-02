@@ -1,14 +1,30 @@
+import { useState } from 'react';
+
 import { Link } from 'react-router-dom';
-import usePosts from '../hooks/usePosts';
 
 import { ImSpinner2 } from 'react-icons/im';
+import { useCreatePost, usePosts } from '../hooks';
+// import { sleep } from '../hooks/server';
 
 export default function Admin() {
   const postsQuery = usePosts();
+  const [createPost, createPostInfo] = useCreatePost();
+
+  const [values, setValues] = useState({});
+
+  const setValue = (field, value) =>
+    setValues((old) => ({ ...old, [field]: value }));
+
+  const onSubmit = async () => {
+    await createPost(values);
+    // await sleep(200);
+    postsQuery.fetch();
+    setValues({});
+  };
 
   return (
     <section className='text-white'>
-      <div className='inline-flex border-b w-full pb-2'>
+      <div className='inline-flex border-b w-full pb-2 '>
         {postsQuery.isLoading ? (
           <>
             <Loader />
@@ -33,7 +49,7 @@ export default function Admin() {
         )}
       </div>
 
-      <div className='mt-2'>
+      <div className='mt-2' key={postsQuery?.data?.length}>
         <h3 className='text-xl mb-2'>Create New Post</h3>
         <form>
           <label htmlFor='title'>Title</label>
@@ -43,12 +59,14 @@ export default function Admin() {
               type='text'
               name='title'
               required
+              onChange={(e) => setValue('title', e.target.value)}
             />
           </div>
           <br />
           <label htmlFor='body'>Body</label>
           <div>
             <textarea
+              onChange={(e) => setValue('body', e.target.value)}
               className='bg-[#161f27] p-[10px] mt-[2px] rounded-sm w-96'
               type='text'
               name='body'
@@ -60,8 +78,18 @@ export default function Admin() {
           <button
             type='submit'
             className='py-2 px-6 bg-[#161f27] hover:bg-slate-500 '
+            onClick={(event) => {
+              event.preventDefault();
+              onSubmit();
+            }}
           >
-            Submit
+            {createPostInfo?.isLoading
+              ? 'Saving...'
+              : createPostInfo?.isError
+              ? 'Error!'
+              : createPostInfo?.isSuccess
+              ? 'Saved!'
+              : 'Create Post'}
           </button>
         </form>
       </div>

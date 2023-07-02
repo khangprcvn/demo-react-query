@@ -2,7 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 
 export function MainPage() {
   return (
-    <div className='bg-[#202b38] h-full w-full flex'>
+    <div className='bg-[#202b38] h-full w-full flex overflow-y-scroll overflow-x-hidden'>
       <div className='w-[200px] text-white p-6  border-r-2 border-slate-500'>
         <Sidebar />
       </div>

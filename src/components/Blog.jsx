@@ -6,8 +6,6 @@ export default function Blog() {
 
   let element = null;
 
-  console.log('App  query:', postsQuery);
-
   if (postsQuery.isLoading) {
     element = <span className='text-slate-200 mt-4 block'>Loading...</span>;
   } else if (postsQuery.isError) {

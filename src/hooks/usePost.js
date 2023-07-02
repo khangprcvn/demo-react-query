@@ -1,25 +1,24 @@
 import React from 'react';
+import { fetchPost } from './server';
 
-import { fetchPosts } from './server';
-
-export default function usePosts() {
+export default function usePost(postId) {
   const [state, setState] = React.useReducer((_, action) => action, {
     isLoading: true,
   });
 
-  const fetch = async () => {
+  const fetch = React.useCallback(async () => {
     setState({ isLoading: true });
     try {
-      const data = await fetchPosts().then((res) => res.data);
+      const data = await fetchPost(postId).then((res) => res.data);
       setState({ isSuccess: true, data });
     } catch (error) {
       setState({ isError: true, error });
     }
-  };
+  }, [postId]);
 
   React.useEffect(() => {
     fetch();
-  }, []);
+  }, [fetch]);
 
   return {
     ...state,
