@@ -18,9 +18,9 @@ export default function Admin() {
   const setValue = (field, value) =>
     setValues((old) => ({ ...old, [field]: value }));
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     postMutation.mutate(values);
-    await sleep(200);
+    // await sleep(5000);
     setValues({});
   };
 

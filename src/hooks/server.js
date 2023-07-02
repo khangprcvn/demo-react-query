@@ -16,7 +16,8 @@ export const fetchPost = async (id) => {
   return axios.get(`${URL}/posts/${id}`);
 };
 
-export const createPost = (values) => {
+export const createPost = async (values) => {
+  await sleep(3000);
   return axios.post(`${URL}/posts`, values);
 };
 
