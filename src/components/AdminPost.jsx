@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { useDeletePost, usePost, useSavePost } from '../hooks';
 import { Loader } from './Admin';
@@ -6,11 +6,10 @@ import { useEffect, useState } from 'react';
 
 export default function Post() {
   const { postId } = useParams();
-  const navigate = useNavigate();
 
   const postQuery = usePost(postId);
   const [savePost, savePostInfo] = useSavePost();
-  const [deletePost, deletePostInfo] = useDeletePost();
+  const deleteMutation = useDeletePost();
 
   const [values, setValues] = useState({});
 
@@ -30,8 +29,7 @@ export default function Post() {
   };
 
   const onDelete = async () => {
-    await deletePost(postId);
-    navigate('/admin');
+    await deleteMutation.mutateAsync(postId);
   };
 
   return (
@@ -101,11 +99,11 @@ export default function Post() {
             className='mt-4 py-2 px-6 bg-[#161f27] hover:bg-slate-500 '
             onClick={onDelete}
           >
-            {deletePostInfo?.isLoading
+            {deleteMutation?.isLoading
               ? 'Saving...'
-              : deletePostInfo?.isError
+              : deleteMutation?.isError
               ? 'Error!'
-              : deletePostInfo?.isSuccess
+              : deleteMutation?.isSuccess
               ? 'Saved!'
               : 'Delete Post'}
           </button>

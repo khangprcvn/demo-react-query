@@ -1,20 +1,16 @@
-import React from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deletePost } from './server';
+import { useNavigate } from 'react-router';
 
 export default function useDeletePost() {
-  const [state, setState] = React.useReducer((_, action) => action, {
-    isIdle: true,
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: (postId) => deletePost(postId).then((resp) => resp.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['posts']);
+      navigate('/admin');
+    },
   });
-
-  const mutate = React.useCallback(async (postId) => {
-    setState({ isLoading: true });
-    try {
-      await deletePost(postId).then((res) => res.data);
-      setState({ isSuccess: true });
-    } catch (error) {
-      setState({ isError: true, error });
-    }
-  }, []);
-
-  return [mutate, state];
 }

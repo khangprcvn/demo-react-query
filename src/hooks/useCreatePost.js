@@ -18,7 +18,7 @@ export default function useCreatePost() {
         ...oldPosts,
         {
           ...post,
-          id: oldPosts?.length,
+          id: oldPosts?.length + 1,
         },
       ]);
 
