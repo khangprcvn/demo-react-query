@@ -34,5 +34,6 @@ export default function useCreatePost() {
     onError: (error, newTodo, context) => {
       queryClient.setQueryData(['posts'], context.previousPosts);
     },
+    retry: 1,
   });
 }
