@@ -1,9 +1,13 @@
 import { Link, Outlet } from 'react-router-dom';
+import { Loader } from './Admin';
+
+import { useIsFetching } from '@tanstack/react-query';
 
 export function MainPage() {
   return (
     <div className='bg-[#202b38] h-full w-full flex overflow-y-scroll overflow-x-hidden'>
       <div className='w-[200px] text-white p-6  border-r-2 border-slate-500'>
+        <GlobalLoader />
         <Sidebar />
       </div>
       <div className='p-6 w-full'>
@@ -29,6 +33,18 @@ function Sidebar() {
         </li>
       </ul>
     </div>
+  );
+}
+
+function GlobalLoader() {
+  const isFetching = useIsFetching();
+
+  return (
+    <Loader
+      className={`fixed right-8 top-4 ${
+        isFetching ? 'opacity-1' : 'opacity-0'
+      }`}
+    />
   );
 }
 

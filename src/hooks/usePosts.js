@@ -1,28 +1,11 @@
-import React from 'react';
-
 import { fetchPosts } from './server';
 
+import { useQuery } from '@tanstack/react-query';
+
 export default function usePosts() {
-  const [state, setState] = React.useReducer((_, action) => action, {
-    isLoading: true,
+  return useQuery({
+    queryKey: ['posts'],
+    queryFn: () => fetchPosts().then((res) => res.data),
+    staleTime: 30 * 1000,
   });
-
-  const fetch = async () => {
-    setState({ isLoading: true });
-    try {
-      const data = await fetchPosts().then((res) => res.data);
-      setState({ isSuccess: true, data });
-    } catch (error) {
-      setState({ isError: true, error });
-    }
-  };
-
-  React.useEffect(() => {
-    fetch();
-  }, []);
-
-  return {
-    ...state,
-    fetch,
-  };
 }

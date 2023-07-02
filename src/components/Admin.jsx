@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 import { ImSpinner2 } from 'react-icons/im';
 import { useCreatePost, usePosts } from '../hooks';
+// import { useQueryClient } from '@tanstack/react-query';
+// import { fetchPost } from '../hooks/server';
 // import { sleep } from '../hooks/server';
 
 export default function Admin() {
@@ -12,13 +14,15 @@ export default function Admin() {
 
   const [values, setValues] = useState({});
 
+  // const queryClient = useQueryClient();
+
   const setValue = (field, value) =>
     setValues((old) => ({ ...old, [field]: value }));
 
   const onSubmit = async () => {
     await createPost(values);
     // await sleep(200);
-    postsQuery.fetch();
+    // postsQuery.fetch();
     setValues({});
   };
 
@@ -39,6 +43,16 @@ export default function Admin() {
                   <Link
                     className='text-slate-300 hover:underline'
                     to={`./${post.id}`}
+                    // onMouseEnter={async () => {
+                    //   await queryClient.prefetchQuery({
+                    //     queryKey: ['post', post.id.toString()],
+                    //     queryFn: () =>
+                    //       fetchPost(post.id.toString()).then(
+                    //         (resp) => resp.data
+                    //       ),
+                    //     staleTime: 10 * 1000,
+                    //   });
+                    // }}
                   >
                     {post.title}
                   </Link>
@@ -98,5 +112,10 @@ export default function Admin() {
 }
 
 export function Loader(props) {
-  return <ImSpinner2 className='animate-spin text-xl' {...props} />;
+  // eslint-disable-next-line react/prop-types
+  const { className, ...rest } = props;
+
+  return (
+    <ImSpinner2 className={`animate-spin text-xl ${className}`} {...rest} />
+  );
 }
