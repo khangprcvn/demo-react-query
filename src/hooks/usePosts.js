@@ -6,6 +6,6 @@ export default function usePosts() {
   return useQuery({
     queryKey: ['posts'],
     queryFn: () => fetchPosts().then((res) => res.data),
-    staleTime: 30 * 1000,
+    staleTime: 10 * 1000,
   });
 }
