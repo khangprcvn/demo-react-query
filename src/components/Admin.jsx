@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 import { ImSpinner2 } from 'react-icons/im';
 import { useCreatePost, usePosts } from '../hooks';
-// import { useQueryClient } from '@tanstack/react-query';
-// import { fetchPost } from '../hooks/server';
+import { useQueryClient } from '@tanstack/react-query';
+import { fetchPost } from '../hooks/server';
 // import { sleep } from '../hooks/server';
 
 export default function Admin() {
@@ -14,7 +14,7 @@ export default function Admin() {
 
   const [values, setValues] = useState({});
 
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const setValue = (field, value) =>
     setValues((old) => ({ ...old, [field]: value }));
@@ -43,16 +43,16 @@ export default function Admin() {
                   <Link
                     className='text-slate-300 hover:underline'
                     to={`./${post.id}`}
-                    // onMouseEnter={async () => {
-                    //   await queryClient.prefetchQuery({
-                    //     queryKey: ['post', post.id.toString()],
-                    //     queryFn: () =>
-                    //       fetchPost(post.id.toString()).then(
-                    //         (resp) => resp.data
-                    //       ),
-                    //     staleTime: 10 * 1000,
-                    //   });
-                    // }}
+                    onMouseEnter={async () => {
+                      await queryClient.prefetchQuery({
+                        queryKey: ['post', post.id.toString()],
+                        queryFn: () =>
+                          fetchPost(post.id.toString()).then(
+                            (resp) => resp.data
+                          ),
+                        staleTime: 10 * 1000,
+                      });
+                    }}
                   >
                     {post.title}
                   </Link>
