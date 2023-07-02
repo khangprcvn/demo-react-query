@@ -1,21 +1,16 @@
-import React from 'react';
-
 import { createPost } from './server';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 export default function useCreatePost() {
-  const [state, setState] = React.useReducer((_, action) => action, {
-    isIdle: true,
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (values) => createPost(values).then((resp) => resp.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['posts'],
+      });
+    },
   });
-
-  const mutate = React.useCallback(async (values) => {
-    setState({ isLoading: true });
-    try {
-      const data = await createPost(values).then((res) => res.data);
-      setState({ isSuccess: true, data });
-    } catch (error) {
-      setState({ isError: true, error });
-    }
-  }, []);
-
-  return [mutate, state];
 }

@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { Loader } from './Admin';
 
 import { useIsFetching } from '@tanstack/react-query';
+import { usePosts } from '../hooks';
 
 export function MainPage() {
   return (
@@ -18,6 +19,8 @@ export function MainPage() {
 }
 
 function Sidebar() {
+  const totalBlog = usePosts()?.data?.length;
+
   return (
     <div>
       <ul>
@@ -25,7 +28,7 @@ function Sidebar() {
           <Link to='/'>Home</Link>
         </li>
         <li className='hover:underline text-lg'>
-          <Link to='/blog'>Blog</Link>
+          <Link to='/blog'>Blog ({totalBlog})</Link>
         </li>
         <hr className='mt-2 mb-2 text-lg' />
         <li className='hover:underline'>

@@ -5,12 +5,11 @@ import { Link } from 'react-router-dom';
 import { ImSpinner2 } from 'react-icons/im';
 import { useCreatePost, usePosts } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
-import { fetchPost } from '../hooks/server';
-// import { sleep } from '../hooks/server';
+import { fetchPost, sleep } from '../hooks/server';
 
 export default function Admin() {
   const postsQuery = usePosts();
-  const [createPost, createPostInfo] = useCreatePost();
+  const postMutation = useCreatePost();
 
   const [values, setValues] = useState({});
 
@@ -20,9 +19,8 @@ export default function Admin() {
     setValues((old) => ({ ...old, [field]: value }));
 
   const onSubmit = async () => {
-    await createPost(values);
-    // await sleep(200);
-    // postsQuery.fetch();
+    postMutation.mutate(values);
+    await sleep(200);
     setValues({});
   };
 
@@ -97,11 +95,11 @@ export default function Admin() {
               onSubmit();
             }}
           >
-            {createPostInfo?.isLoading
+            {postMutation?.isLoading
               ? 'Saving...'
-              : createPostInfo?.isError
+              : postMutation?.isError
               ? 'Error!'
-              : createPostInfo?.isSuccess
+              : postMutation?.isSuccess
               ? 'Saved!'
               : 'Create Post'}
           </button>
